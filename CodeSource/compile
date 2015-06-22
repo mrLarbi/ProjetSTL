@@ -1,0 +1,25 @@
+INCLUDE_DIRS="-I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include\
+ -I ../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include\
+ -I ../STM32Cube_FW_F4_V1.3.0/Drivers/BSP/STM32F4xx-Nucleo -I ../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc\
+ -I ../STM32Cube_FW_F4_V1.3.0/Projects/STM32F401RE-Nucleo/Templates\
+ -IInclude/"
+ 
+CFLAGS=" -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb $INCLUDE_DIRS -DSTM32F401xE -Os"
+
+CLINKS="-mcpu=cortex-m4 -mlittle-endian -mthumb -DSTM32F401xE -T ../STM32Cube_FW_F4_V1.3.0/Projects/STM32F401RE-Nucleo/Templates/TrueSTUDIO/STM32F4xx-Nucleo/STM32F401CE_FLASH.ld --specs=rdimon.specs -Wl,--start-group -lgcc -lc -lm -lrdimon -Wl,--end-group,--gc-sections"
+
+arm-none-eabi-gcc $CFLAGS -c src/main.c -o bin/main.o
+arm-none-eabi-gcc $CFLAGS -c src/PWMoutput.c -o bin/PWMoutput.o
+arm-none-eabi-gcc $CFLAGS -c src/startup_stm32f401xe.s -o bin/startup.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_it.c -o bin/stm32f4xx_it.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_hal_gpio.c -o bin/stm32f4xx_hal_gpio.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_hal_tim.c -o bin/stm32f4xx_hal_tim.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_hal_tim_ex.c -o bin/stm32f4xx_hal_tim_ex.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_hal_dma.c -o bin/stm32f4xx_hal_dma.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_hal_rcc.c -o bin/stm32f4xx_hal_rcc.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_nucleo.c -o bin/stm32f4xx_nucleo.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_hal.c -o bin/stm32f4xx_hal.o
+arm-none-eabi-gcc $CFLAGS -c src/stm32f4xx_hal_cortex.c -o bin/stm32f4xx_hal_cortex.o
+arm-none-eabi-gcc $CFLAGS -c src/system_stm32f4xx.c -o bin/system_stm32f4xx.o
+arm-none-eabi-gcc $CLINKS  bin/*.o -o bin/main.elf
+arm-none-eabi-objcopy -Oihex bin/main.elf bin/main.hex
